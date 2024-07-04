@@ -15,10 +15,12 @@ import (
 var log = utils.GetLog()
 
 func main() {
-
-	types, _ := utils.ExtractStructTypes("./game")
+	var packageName = "./game/config/bean"
+	types, err := utils.ExtractStructTypes(packageName)
+	if err != nil {
+		log.Error(err)
+	}
 	log.Info("scan types: ", types)
-
 	testExcel2Bean()
 }
 
