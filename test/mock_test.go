@@ -2,13 +2,15 @@ package test
 
 import (
 	"fmt"
+	"test2/game/config/parse"
 	"testing"
 )
 
 func TestDefer(t *testing.T) {
-	defer fmt.Println("1")
-	defer fmt.Println("2")
-	defer fmt.Println("3")
-
-	panic("panic error!")
+	parse := parse.Int32Parse{}
+	i, err := parse.Parse("1-")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(i)
 }

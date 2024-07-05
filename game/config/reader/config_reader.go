@@ -21,7 +21,7 @@ func NewConfigHead() common.ConfigHead {
 }
 
 func ReadExcel(filepath string) common.ConfigHead {
-	log.Info("read file: ", filepath)
+	log.Debug("read file: ", filepath)
 	f, err := excelize.OpenFile(filepath)
 	if err != nil {
 		log.Error(err)
@@ -32,7 +32,7 @@ func ReadExcel(filepath string) common.ConfigHead {
 		if err := f.Close(); err != nil {
 			log.Fatal(err)
 		}
-		log.Info("close file: ", filepath)
+		log.Debug("close file: ", filepath)
 	}()
 
 	configHead := NewConfigHead()
@@ -48,7 +48,7 @@ func ReadExcel(filepath string) common.ConfigHead {
 	}
 
 	configHead.Heads = rows[0][:]
-	log.Info("表头: ", configHead.Heads)
+	log.Info("配置:", f.Path, " 表头:", configHead.Heads)
 
 	for _, row := range rows[1:] {
 		lineData := row[:]

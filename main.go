@@ -12,19 +12,17 @@ import (
 	"test2/utils"
 )
 
+const (
+	BeanPath = "./game/config/bean"
+)
+
 var log = utils.GetLog()
 
 func main() {
-	var packageName = "./game/config/bean"
-	types, err := utils.ExtractStructTypes(packageName)
-	if err != nil {
-		log.Error(err)
-	}
-	log.Info("scan types: ", types)
-	testExcel2Bean()
+	excel2Bean()
 }
 
-func testExcel2Bean() {
+func excel2Bean() {
 	dirPath := "resource/excel"
 	dir, err := os.ReadDir(dirPath)
 	if err != nil {
@@ -37,16 +35,12 @@ func testExcel2Bean() {
 		excel := reader.ReadExcel(fileAbPath)
 		excelJson, _ := utils.ToJson(excel)
 		log.Debug("excel text: ", excelJson)
-
 		var configResource = strings.TrimSuffix(file.Name(), filepath.Ext(file.Name())) + "_" + "resource"
-		log.Info("configResource: ", configResource)
-
 		configMap[strings.ToLower(configResource)] = excel
 	}
 
 	var resourceBeanHolder = bean.GetInstance()
 
-	// 获取包的类型
 	pkg := reflect.TypeOf(resourceBeanHolder)
 	elem := reflect.ValueOf(&resourceBeanHolder).Elem()
 	//log.Info(pkg)
@@ -74,13 +68,8 @@ func testExcel2Bean() {
 		configHead := configMap[resourceName]
 		for index := range configHead.Data {
 			fieldString := configHead.GetFieldString(index)
-			createInstance := utils.CreateInstance(nameFiled.Type())
-			utils.FillObjFieldValue(fieldString, &createInstance)
+			utils.ParseResourceBean(nameFiled, fieldString)
 		}
 	}
-
-}
-
-func getResourceBeanName(filename string) {
 
 }
